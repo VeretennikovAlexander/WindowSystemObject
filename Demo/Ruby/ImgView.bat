@@ -1,0 +1,2 @@
+ruby ImgView.rb
+pause

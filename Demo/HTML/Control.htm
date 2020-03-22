@@ -1,0 +1,70 @@
+<HTML>
+<HEAD>
+<TITLE>Test page for WindowSystemControl</TITLE>
+</HEAD>
+<BODY onload = "ControlLoad()">
+
+<OBJECT
+ID="WindowSystemControl" 
+CLASSID="CLSID:8E57EFA4-E91E-44FC-B69E-7A3BC1F5AB8D" 
+HEIGHT = 200 
+WIDTH = 700
+>
+</OBJECT>
+
+<SCRIPT LANGUAGE=JScript>
+function ControlLoad()
+{
+f = WindowSystemControl
+o = f.Root
+f.SetBounds(0,0,700,200)
+
+t = f.TextOut(10,50,"WindowSystemControl Example")
+t.Font.Color = 0x000000FF
+t.Font.Size = 18
+f.TextOut(60,90,"WindowSystemControl is a WSO form that contains an ActiveX control.")
+f.TextOut(60,110,"WindowSystemControl allows you to integate WSO with third-patry interfaces.")
+
+t = f.CreateButton(10,40,75,25,"Close")
+t.OnClick = ButtonClose
+t.Align  = o.Translate("AL_BOTTOMRIGHT")
+
+f.Color = 0x00FFFFFF
+
+f.CreateStatusBar().Name = "StatusBar"
+f.StatusBar.Add(100).AutoSize = true
+
+f.OnMouseMove = FormMouseMove
+f.OnMouseLeave = FormMouseLeave
+f.OnMouseUp = FormMouseUp
+
+m = f.CreateMenuBar(0,0,0,25)
+m.Align = o.Translate("AL_TOP")
+t = m.Menu.Add("File")
+t.Add("Exit").OnExecute = ButtonClose
+
+function FormMouseLeave(Sender)
+{
+	f.StatusBar.item(0).Text = ""
+}
+
+function FormMouseMove(Sender,x,y)
+{
+	f.StatusBar.item(0).Text = x+" x "+y
+}
+
+function ButtonClose(Sender)
+{
+	window.close()
+}
+
+function FormMouseUp(Sender,x,y,Button,Flags)
+{
+	Sender.Form.MessageBox("MouseUp "+x+" x "+y+", Button = "+Button)
+}
+}
+</SCRIPT>
+
+</BODY>
+
+</HTML>

@@ -1,0 +1,18 @@
+// Test.idl : IDL source for Test
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (Test.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	uuid(4CE5B170-EA80-4831-875B-1CC7D2CA12CC),
+	version(1.0),
+	helpstring("Test 1.0 Type Library")
+]
+library TestLib
+{
+	importlib("stdole2.tlb");
+};

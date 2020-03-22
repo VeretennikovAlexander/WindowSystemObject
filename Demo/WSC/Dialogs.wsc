@@ -1,0 +1,239 @@
+<?XML version="1.0"?>
+<package>
+<?component error="true" debug="true"?>
+
+<comment>
+	WindowSystemObject (WSO) file
+	Copyright (C) Veretennikov A. B. 2004     
+</comment>
+
+<component id="Dialogs">
+
+	<registration
+		progid="Scripting.WindowSystemObject.Dialogs"
+		description="WindowSystemObject Dialogs Extensions"
+		version="1.0"
+		clsid="{00BCDF21-042A-436d-80F0-28BDB7970D8D}"
+	/>
+
+	<public>
+		<method name="InputDialog"/>
+		<method name="InputPasswordDialog"/>
+		<method name="ChoicesDialog"/>
+	</public>
+
+	<script language="JScript">
+		<![CDATA[
+			var Result = "";
+
+			function BeginCreateInputForm(Caption,Prompt)
+			{
+				f = WSO.CreateDialogForm(0,0,100,100);
+				f.BorderWidth = 10;
+				f.SizeGrip = false;
+				f.MaximizeBox = false;
+				f.MinimizeBox = false;
+				
+				f.Text = Caption;
+				t = f.TextOut(0,0,Prompt);
+				
+				p = 300;
+				q = t.Width;
+				if (p<t.Width) p = t.Width;
+				
+				f.ClientWidth = p;
+				
+				return f;
+			};			
+
+			function EndCreateInputForm(f,Edit)
+			{
+				t = f.CreateButton(f.ClientWidth-155,10+Edit.Top+Edit.Height,75,25,"OK");
+				t.Default = true;
+				t.OnClick = InputDialogOKClick;
+				t = f.CreateButton(f.ClientWidth-75,10+Edit.Top+Edit.Height,75,25,"Cancel");
+				t.Cancel = true;
+				t.OnClick = CloseFormHandler;
+
+				f.ClientHeight = t.Top+t.Height;
+
+				f.CenterControl();		
+			};
+			
+			function InputPasswordDialog(Caption,Prompt,Default,Variants)
+			{
+				f = BeginCreateInputForm(Caption,Prompt);
+
+				Edit = f.CreateEdit(0,10+t.Height,f.ClientWidth,25);
+				Edit.PasswordChar = "*";				
+				Edit.Text = Default;
+				
+				EndCreateInputForm(f,Edit);
+				
+				Result="";
+				
+				f.ShowModal();
+				f.Destroy();
+				
+				return Result;
+			};
+
+			function InputDialog(Caption,Prompt,Default,Variants)
+			{
+				f = BeginCreateInputForm(Caption,Prompt);
+
+				if (Variants>0)
+				{
+					Edit = f.CreateComboBox(0,10+t.Height,f.ClientWidth,25); 
+					Variants+=4;
+					for (p = 4; p<Variants; p++)
+						Edit.Add(arguments[p]);
+				} else
+					Edit = f.CreateEdit(0,10+t.Height,f.ClientWidth,25);
+				
+				Edit.Text = Default;
+				
+				EndCreateInputForm(f,Edit);
+
+				Result="";
+				
+				f.ShowModal();
+				f.Destroy();
+				return Result;
+			};
+			
+			function InputDialogOKClick(Sender)
+			{				
+				if (Edit.Text == "")
+				{
+					Sender.Form.MessageBox(getResource("errorInput"),"",WSO.Translate("MB_ICONERROR"));
+				} else
+				{
+					Result = Edit.Text;
+					CloseFormHandler(Sender);
+				};
+			};
+			
+			function ChoicesDialog(Caption,SourceText,DestText,LeftStr,RightStr)
+			{
+				f = WSO.CreateDialogForm(0,0,0,0);
+				f.ClientWidth = 500;
+				f.ClientHeight = 300;
+				f.Text = Caption;
+
+				function CreateFrame(w,s,a)
+				{
+					x = f.CreateFrame(0,0,w,0);
+					x.BorderWidth = 10;
+					x.Align = a;
+					t = x.TextOut(0,0,s);
+					
+					Box = x.CreateListBox(0,0,0,x.ClientHeight - t.Height);
+					Box.Align = WSO.Translate("AL_BOTTOM");
+					Box.Name = "Box";
+				
+					return x;
+				};
+				
+				Bottom = f.CreateFrame(0,0,0,50);
+				Bottom.Align = WSO.Translate("AL_BOTTOM");
+				Bottom.BorderWidth = 10;			
+				
+				Left = CreateFrame(210,SourceText,WSO.Translate("AL_LEFT"));
+
+				Center = f.CreateFrame(0,0,50,0);
+				Center.Align = Left.Align;				
+				Center.MaxWidth = 50;
+				Center.MinWidth = 50;
+				
+				Right = CreateFrame(200,DestText,WSO.Translate("AL_CLIENT"));				
+				t = Bottom.CreateButton(Bottom.ClientWidth - 155,0,75,25,"OK");
+				t.OnClick = ChoicesDialogOKClick;
+				t.Default = true;
+				
+				t = Bottom.CreateButton(Bottom.ClientWidth - 75,0,75,25,"Cancel");
+				t.OnClick = CloseFormHandler;
+				t.Cancel = true;
+				
+				Center.CreateButton(10,50,25,25,">").OnClick = ToRight;
+				Center.CreateButton(10,80,25,25,">>").OnClick = ToRightAll;
+				Left.Box.OnDblClick = ToRight;
+				Center.CreateButton(10,150,25,25,"<").OnClick = ToLeft;
+				Center.CreateButton(10,180,25,25,"<<").OnClick = ToLeftAll;
+				Right.Box.OnDblClick = ToLeft;
+
+				a = LeftStr.split("\r");
+				for (p = 0; p<a.length; p++) Left.Box.Add(a[p]);
+
+				a = RightStr.split("\r");
+				for (p = 0; p<a.length; p++) Right.Box.Add(a[p]);
+				
+				Result = "";
+				
+				f.CenterControl();
+				f.ShowModal();
+				f.Destroy();
+				
+				return Result;
+													
+				function ToRight(Sender)
+				{
+					i = Left.Box.ItemIndex;
+					if (i!=-1)
+					{
+						s = Left.Box.item(i);
+						Right.Box.Add(s);
+						Left.Box.Remove(i);
+					};					
+				};
+				
+				function ToRightAll(Sender)
+				{
+					for (p = 0; p<Left.Box.Count; p++)
+						Right.Box.Add(Left.Box.item(p));
+						Left.Box.Clear();
+				};								
+				
+				function ToLeft(Sender)
+				{
+					i = Right.Box.ItemIndex;
+					if (i!=-1)
+					{
+						s = Right.Box.item(i);
+						Left.Box.Add(s);
+						Right.Box.Remove(i);
+					};					
+				};
+				
+				function ToLeftAll(Sender)
+				{
+					for (p = 0; p<Right.Box.Count; p++)
+						Left.Box.Add(Right.Box.item(p));
+						Right.Box.Clear();
+				};								
+				
+				function ChoicesDialogOKClick(Sender)
+				{				
+					Result = "";					
+					for (p = 0; p<Right.Box.Count; p++)
+						Result += Right.Box.item(p)+"\r";
+					if (Result == "") Result = "\r";
+					CloseFormHandler(Sender);			
+				};
+							
+			};
+			
+			function CloseFormHandler(Sender)
+			{
+				Sender.Form.Close();
+			};
+
+		]]>
+	</script>
+
+<object id="WSO" progid="Scripting.WindowSystemObject"/>
+
+<resource id="errorInput">Invalid input value</resource>
+
+</component>
+</package>

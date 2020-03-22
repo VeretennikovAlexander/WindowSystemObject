@@ -1,0 +1,52 @@
+<BODY>
+
+<span id="testproperty">Click the "Select" button to open a file selection dialog.</span>
+
+<p><INPUT TYPE="TEXT" VALUE="File.Txt" SIZE = "90" id = "TextBox"></p>
+<p><INPUT TYPE="BUTTON" VALUE="Select" id = "Button"></p>
+
+<script language=JScript>
+Button.onclick=testhandler
+
+function testhandler()
+{
+	o = new ActiveXObject("Scripting.WindowSystemObject")
+	f = o.CreateForm(0,0,400,140)
+	f.Text = "Select file"
+	f.SizeGrip = false
+	f.ControlBox = false
+	f.MaximizeBox = false
+	f.TextOut(10,10,"Enter the file name")
+	Edit = f.CreateEdit(10,40,300,25)
+	Edit.Text = TextBox.value
+	f.CreateButton(310,40,75,Edit.Height,"Browse...").OnClick = ExploreClick
+	x = f.CreateButton(100,70,75,25,"OK")
+	x.OnClick = OkClick
+	x.Default = true
+	x = f.CreateButton(190,70,75,25,"Cancel")
+	x.OnClick = CloseForm
+	f.CancelButton = x
+	f.CenterControl()
+	f.ShowModal()
+	f.Destroy()
+}
+
+function ExploreClick(Sender)
+{
+	Edit.Text = f.OpenDialog("txt","Text files (*.txt) | *.txt")
+};
+
+function CloseForm(Sender)
+{
+	Sender.Form.Close()
+};
+
+function OkClick(Sender)
+{
+	TextBox.value = Edit.Text
+	Sender.Form.Close()
+};
+
+</script>
+
+</BODY>

@@ -1,0 +1,99 @@
+<?XML version="1.0"?>
+<package>
+<?component error="true" debug="true"?>
+
+<comment>
+	WindowSystemObject (WSO) sample
+	Copyright (C) Veretennikov A. B. 2004     
+</comment>
+
+<component id="MessageDialog">
+
+	<registration
+		progid="Scripting.MessageDialog"
+		description="MessageDialog"
+		version="1.0"
+		clsid="{07F9B8AF-8FDA-4c45-8DDD-C18B71C6747A}"
+	/>
+
+	<public>
+		<method name="ShowModal"/>
+		<property name="FileName"/>
+		<property name="Caption">
+			<get internalName="getCaption"/>
+			<put internalName="putCaption"/>
+		</property>
+		<event name="onhelp"/>
+	</public>
+
+	<script language="VBScript">
+		<![CDATA[
+			Set f = WSO.CreateForm(0,0,0,0)
+			f.ClientWidth = 500
+			f.ClientHeight = 300
+			f.CenterControl()
+			f.Text = "Message Dialog"
+			f.SizeGrip = false
+			f.MaximizeBox = false
+							
+			Function getCaption()			
+				getCaption = f.Text
+			End Function
+
+			Function putCaption(Value)
+				f.Text = Value
+			End Function
+			
+			Sub ShowModal()			
+				Set r = f.Rectangle(0,0,0,70)
+				r.Align = WSO.Translate("AL_TOP")
+				r.color = &H00FF0000
+
+				f.GraphFont.Size = 16
+				f.GraphFont.Color = &H00FFFFFF
+				f.GraphFont.Bold = true
+				f.TextOut 10,10,"WindowSystemObject (WSO) 1.0"
+				f.TextOut 60,40,"Message Dialog Example"
+				
+				Set Edit = f.CreateRichEdit(0,0,0,0)
+				Edit.Align = WSO.Translate("AL_CLIENT")
+				Edit.ReadOnly = true
+				Edit.Border = false
+				Edit.ParentColor = true
+				
+				Set FSO = CreateObject("Scripting.FileSystemObject")
+				Set file = FSO.OpenTextFile(FileName,1,false)
+				
+				If not Edit.Load(file) Then
+					Set file = FSO.OpenTextFile(FileName,1,false)
+					Edit.Load file,WSO.Translate("SF_TEXT")
+				End If
+				
+				Set t = f.CreateFrame(0,0,0,50)
+				t.Align = WSO.Translate("AL_BOTTOM")
+				
+				Set h = t.CreateButton(300,10,75,25,"OK")
+				h.Default = true
+				h.OnClick = GetRef("CloseFormHandler")
+					
+				Set h = t.CreateButton(380,10,75,25,"Help")
+				f.HelpButton = h
+				h.OnClick = GetRef("HelpClick")
+				
+				f.ShowModal()				
+			End Sub
+			
+			Sub CloseFormHandler(Sender)
+				Sender.Form.Close()
+			End Sub
+			
+			Sub HelpClick(Sender)
+				fireEvent("onhelp")
+			End Sub	
+		]]>
+	</script>
+
+<object id="WSO" progid="Scripting.WindowSystemObject"/>
+
+</component>
+</package>

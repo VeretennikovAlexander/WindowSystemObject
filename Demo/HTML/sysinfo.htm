@@ -1,0 +1,172 @@
+<HTML>
+<HEAD>
+<TITLE>Test page for WindowSystemControl</TITLE>
+</HEAD>
+<BODY onload = "ControlLoad()">
+
+<OBJECT
+ID="WindowSystemControl" 
+CLASSID="CLSID:8E57EFA4-E91E-44FC-B69E-7A3BC1F5AB8D" 
+HEIGHT = 200 
+WIDTH = 750
+>
+</OBJECT>
+
+<SCRIPT LANGUAGE=JScript>
+function ControlLoad()
+{
+f = WindowSystemControl
+o = f.Root
+f.SetBounds(0,0,750,300)
+
+f.Color = 0x00FFFFFF
+
+f.CreateStatusBar().Name = "StatusBar"
+f.StatusBar.Add(100).AutoSize = true
+
+t = f.Rectangle(0,0,0,25)
+t.Align = o.Translate("AL_TOP")
+t.Color = 0x00FFE0B0
+
+t = f.TextOut(10,5,"HTML System Information Sample")
+
+m = f.CreateMenuBar(0,0,0,25)
+m.Align = o.Translate("AL_TOP")
+t = m.Menu.Add("File")
+t.Add("Exit","ESC").OnExecute = ButtonClose
+t = m.Menu.Add("Help")
+t.Add("About","F1").OnExecute = HelpAbout
+
+tabs = f.CreateTabControl(0,0,0,0)
+tabs.Align = o.Translate("AL_CLIENT")
+
+t = tabs.CreateTab("Web browser")
+l = t.CreateListView(0,0,0,0,o.Translate("LVS_REPORT"))
+l.Align = o.Translate("AL_CLIENT")
+l.Columns.Add("Key",200)
+l.Columns.Add("Value",500)
+l.Style = 1
+
+x = l.Add("Name")
+x.SubItems(0) = window.navigator.appName
+
+x = l.Add("Code name")
+x.SubItems(0) = window.navigator.appCodeName
+
+x = l.Add("Version")
+x.SubItems(0) = window.navigator.appVersion
+
+x = l.Add("Browser language")
+x.SubItems(0) = window.navigator.browserLanguage
+
+x = l.Add("System language")
+x.SubItems(0) = window.navigator.systemLanguage
+
+x = l.Add("User language")
+x.SubItems(0) = window.navigator.userLanguage
+
+x = l.Add("CPU")
+x.SubItems(0) = window.navigator.cpuClass
+
+x = l.Add("Platform")
+x.SubItems(0) = window.navigator.platform
+
+x = l.Add("User-agent request header")
+x.SubItems(0) = window.navigator.userAgent
+
+x = l.Add("Java enabled")
+x.SubItems(0) = window.navigator.javaEnabled()
+
+x = l.Add("Data tainting enabled")
+x.SubItems(0) = window.navigator.taintEnabled()
+
+t = tabs.CreateTab("Screen")
+l = t.CreateListView(0,0,0,0,o.Translate("LVS_REPORT"))
+l.Align = o.Translate("AL_CLIENT")
+l.Columns.Add("Key",200)
+l.Columns.Add("Value",500)
+l.Style = 1
+
+x = l.Add("Width")
+x.SubItems(0) = window.screen.width
+
+x = l.Add("Height")
+x.SubItems(0) = window.screen.height
+
+function ButtonClose(Sender)
+{
+	window.close()
+}
+
+function HelpAbout(Sender)
+{
+	AboutWSO(Sender,"HTML System Information Sample")
+}
+
+function AboutWSO(Sender,s)
+{
+	var j = Sender.Form.CreateDialogForm(0,0,0,0)
+	j.ClientWidth = 400
+	j.ClientHeight = 250
+	j.CenterControl()
+	with (j.Rectangle(0,0,0,75))
+	{
+		Brush.Color = 0x00FFA0A0
+		Brush.Style = o.Translate("B_GRADIENT | DIRECTION_TOP_BOTTOM")
+		Brush.GradientColor = 0x00FFEEEE
+		Pen.Color = 0x00FF5555
+		Align = o.Translate("AL_TOP")
+	}
+	with (j.Rectangle(0,0,0,0))
+	{
+		Brush.Color = 0x00FFEEEE
+		Brush.Style = o.Translate("B_GRADIENT | DIRECTION_TOP_BOTTOM")
+		Brush.GradientColor = 0x00FFEEEE
+		Pen.Color = 0x00FF5555
+		Align = o.Translate("AL_CLIENT")		
+	}
+	var t = j.CreateButton(220,220,75,25,"Close")
+	t.OnClick = CloseFormHandler
+	t.Default = true
+	t.Cancel = true
+	t = j.TextOut(100,10,j.Root.Version.String)
+	with (t.Font)
+	{
+		Bold = true
+		Name = "Arial Black"
+		Size = 14
+		Color = 0x000000FF
+		Bold = true
+		Italic = true
+		Angle = 5
+	}
+	j.TextOut(100,50,s).Font.Bold = true
+	j.TextOut(100,90,"(C) Veretennikov A. B. 2004 - 2006")
+	j.CreateHyperLink(100,130,200,25,j.Root.Version.Url,"WSO in the Web")
+	j.Color = 0x00FFEEEE
+	if (j.Root.Version.Trial)
+	j.TextOut(100,170,"It is a Demo version of WSO\rwith several serious limitations.\rTry it and buy the full version.")
+	j.Text = "About WSO"
+
+	function OnHitTest(Sender,x,y,ResultPtr)
+	{
+		ResultPtr.put(o.Translate("HTCAPTION"))
+	}
+
+	j.OnHitTest = OnHitTest
+
+	j.ShowModal()
+	j.Destroy()
+}
+
+function CloseFormHandler(Sender)
+{
+	Sender.Form.Close()
+}
+
+}
+</SCRIPT>
+
+</BODY>
+
+</HTML>

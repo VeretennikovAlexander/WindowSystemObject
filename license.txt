@@ -1,0 +1,29 @@
+Copyright (c) 2004-2015 Veretennikov Alexander Borisovich, 
+	Russian Federation, Ekaterinburg
+
+
+                          All Rights Reserved
+
+Permission to use, copy and distribute this software and its
+documentation for any purpose, including commercial applications, 
+is hereby granted without fee, provided that the above 
+copyright notice appear in all copies and that both that
+copyright notice and this permission notice appear in supporting
+documentation, and that the names of Veretennikov Alexander
+Borisovich, not be used in advertising or publicity pertaining
+to distribution of the software without specific, written prior
+permission.
+
+You may not alter this software in any way, including changing or 
+removing any messages or windows. You may not decompile, reverse engineer, 
+disassemble or otherwise reduce this software to a human perceivable form.
+
+VERETENNIKOV ALEXANDER BORISOVICH, DISCLAIM ALL
+WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR PURPOSE.
+IN NO EVENT SHALL VERETENNIKOV ALEXANDER BORISOVICH,
+BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY
+DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
+ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
+SOFTWARE.

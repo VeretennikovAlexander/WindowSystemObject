@@ -1,0 +1,75 @@
+<BODY>
+
+This sample shows how to create ActiveX controls by means of WindowSystemObject. 
+
+<p><INPUT TYPE="BUTTON" VALUE="Test" id = "Button"></p>
+
+<script language=JScript>
+Button.onclick=testhandler
+
+function test(o)
+{
+	f = o.CreateForm(0,0,400,140)
+	f.ClientHeight = 150
+	f.SizeGrip = false
+	f.ControlBox = false
+	f.TextOut(10,10,"Welcome to WSO")
+	x = f.CreateButton(250,120,75,25,"Close")
+	x.OnClick = CloseForm	
+	f.CancelButton = x
+	f.CreateButton(10,40,200,25,"Create Calendar Control").OnClick = CreateCalendarControl
+	f.CreateButton(10,70,200,25,"Create Explorer Control").OnClick = CreateExplorerControl
+	f.CreateButton(10,100,200,25,"Create MediaPlayer Control").OnClick = CreateMediaPlayerControl
+
+	f.CenterControl()
+	f.ShowModal()
+}
+
+function testhandler()
+{
+	test(new ActiveXObject("Scripting.WindowSystemObject"))
+}
+
+function CreateCalendarControl(Sender)
+{
+	j = Sender.Form.CreateDialogForm(0,0,300,280)
+	j.ClientWidth = 300
+	j.CenterControl()
+	j.CreateButton(100,210,75,25,"Close").OnClick = CloseForm
+	j.CreateActiveXControl(0,0,300,200,"MSCAL.Calendar")
+	j.ShowModal()
+	j.Destroy()
+}
+
+function CreateExplorerControl(Sender)
+{
+	j = Sender.Form.CreateDialogForm(0,0,300,280)
+	j.ClientWidth = 300
+	j.CenterControl()
+	j.CreateButton(100,210,75,25,"Close").OnClick = CloseForm
+	t = j.CreateActiveXControl(0,0,300,200,"{8856F961-340A-11D0-A96B-00C04FD705A2}")
+	if (t!=null)
+		t.Control.Navigate("about:blank")
+	j.ShowModal()
+	j.Destroy()
+}
+
+function CreateMediaPlayerControl(Sender)
+{
+	j = Sender.Form.CreateDialogForm(0,0,300,280)
+	j.ClientWidth = 300
+	j.CenterControl()
+	j.CreateButton(100,210,75,25,"Close").OnClick = CloseForm
+	t = j.CreateActiveXControl(0,0,300,200,"{22D6F312-B0F6-11D0-94AB-0080C74C7E95}")
+	j.ShowModal()
+	j.Destroy()
+}
+
+function CloseForm(Sender)
+{
+	Sender.Form.Close()
+}
+
+</script>
+
+</BODY>
